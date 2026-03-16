@@ -95,10 +95,11 @@ const Nav = () => (
       <span className="heading-condensed text-xl tracking-widest">Antares</span>
     </div>
     <div className="hidden lg:flex items-center gap-10 text-[10px] font-bold tracking-[0.2em] uppercase text-white/50">
-      <a href="#features" className="hover:text-white transition-colors">Products</a>
+      <a href="#about" className="hover:text-white transition-colors">About</a>
+      <a href="#features" className="hover:text-white transition-colors">Features</a>
       <a href="#performance" className="hover:text-white transition-colors">Performance</a>
       <a href="#security" className="hover:text-white transition-colors">Security</a>
-      <a href="https://github.com" className="hover:text-[#FF5A5F] transition-colors"><Github className="w-4 h-4" /></a>
+      <a href="https://github.com/yeswanthyes" target="_blank" rel="noopener noreferrer" className="hover:text-[#FF5A5F] transition-colors"><Github className="w-4 h-4" /></a>
     </div>
     <div className="flex items-center gap-4">
       <button className="btn-ghost !px-6 !py-2 !text-[9px] border-white/10">
@@ -152,7 +153,7 @@ export default function App() {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
               <button className="btn-accent border-2 border-[#FF5A5F]">Coming Soon</button>
-              <button className="btn-ghost border-2">View Features</button>
+              <a href="#features" className="btn-ghost border-2 flex items-center justify-center">View Features</a>
             </div>
           </Reveal>
 
@@ -169,6 +170,22 @@ export default function App() {
           </Reveal>
         </div>
       </section>
+
+      {/* SECTION - ABOUT */}
+      <Section
+        id="about"
+        title="Redefining the Internet Experience"
+        subtitle="About Antares"
+        description="Antares is designed to redefine how people interact with the internet. By combining the reliability of Chromium with advanced AI capabilities, Antares helps users find information faster, automate tasks, and maintain complete control over their online privacy. The browser intelligently adapts to your workflow, providing context-aware assistance and performance optimizations in real time."
+        visual={
+          <div className="w-full h-full flex items-center justify-center">
+            <div className="relative w-full aspect-square glass-lupine rounded-[3rem] p-12 overflow-hidden group">
+              <Sparkles className="w-full h-full text-[#FF5A5F] opacity-20 group-hover:scale-110 transition-transform duration-1000" />
+              <div className="absolute inset-0 bg-gradient-to-br from-[#FF5A5F]/10 to-transparent blur-2xl" />
+            </div>
+          </div>
+        }
+      />
 
       {/* SECTION 2 — PRODUCT INTRODUCTION */}
       <Section
@@ -341,7 +358,7 @@ export default function App() {
               Download Antares today and experience an AI-powered browsing environment built for productivity, speed, and security.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-              <button className="btn-accent px-12 py-5 text-sm">Download for Windows</button>
+              <button className="btn-accent px-12 py-5 text-sm">Coming Soon on Windows</button>
               <button className="btn-ghost px-12 py-5 text-sm opacity-50 cursor-not-allowed">Coming Soon: macOS & Linux</button>
             </div>
 
@@ -373,17 +390,29 @@ export default function App() {
           ANTARES
         </div>
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-12 mb-24">
-            {['Product', 'Features', 'Technology', 'Download', 'GitHub'].map((section, i) => (
-              <div key={i}>
-                <h5 className="heading-condensed text-lg mb-6">{section}</h5>
-                <ul className="space-y-3 text-[10px] font-bold tracking-widest text-white/30 uppercase cursor-pointer">
-                  <li className="hover:text-white transition-colors">Overview</li>
-                  <li className="hover:text-white transition-colors">Documentation</li>
-                  <li className="hover:text-white transition-colors">Updates</li>
-                </ul>
-              </div>
-            ))}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-24">
+            <div>
+              <h5 className="heading-condensed text-lg mb-6">Explore</h5>
+              <ul className="space-y-3 text-[10px] font-bold tracking-widest text-white/30 uppercase cursor-pointer">
+                <li><a href="#about" className="hover:text-white transition-colors">About</a></li>
+                <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
+                <li><a href="#performance" className="hover:text-white transition-colors">Performance</a></li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="heading-condensed text-lg mb-6">Security</h5>
+              <ul className="space-y-3 text-[10px] font-bold tracking-widest text-white/30 uppercase cursor-pointer">
+                <li><a href="#security" className="hover:text-white transition-colors">Privacy</a></li>
+                <li><a href="#security" className="hover:text-white transition-colors">Encryption</a></li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="heading-condensed text-lg mb-6">Connect</h5>
+              <ul className="space-y-3 text-[10px] font-bold tracking-widest text-white/30 uppercase cursor-pointer">
+                <li><a href="https://github.com/yeswanthyes" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">GitHub</a></li>
+                <li className="hover:text-white transition-colors">Twitter</li>
+              </ul>
+            </div>
           </div>
           <div className="flex flex-col md:flex-row justify-between items-center gap-8 pt-12 border-t border-white/5 text-[10px] font-bold tracking-[0.3em] uppercase text-white/20">
             <p>Antares Browser © 2026</p>
