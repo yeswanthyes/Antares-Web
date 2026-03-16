@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-cyan: #00B2FF;
+  --color-brand-purple: #8B5CF6;
+  --color-brand-lime: #00FF85;
+  --color-brand-black: #0A0A0A;
+}
+
+:root {
+  font-family: 'Plus Jakarta Sans', 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: dark;
+  color: #FFFFFF;
+
+  background-color: #0A0A0A;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-color: #0A0A0A;
+}
+
+@layer utilities {
+  .glass {
+    @apply backdrop-blur-xl bg-white/5 border border-white/10;
+  }
+  
+  .glass-dark {
+    @apply backdrop-blur-2xl bg-black/40 border border-white/5;
+  }
+
+  .glow-cyan {
+    box-shadow: 0 0 20px rgba(0, 178, 255, 0.3);
+  }
+
+  .glow-purple {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+  }
+
+  .text-glow-cyan {
+    text-shadow: 0 0 10px rgba(0, 178, 255, 0.5);
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60;
+  }
+
+  .highlight-pill {
+    @apply inline-flex items-center px-3 py-0.5 rounded-full border border-white/20 text-sm font-medium;
+  }
+}
