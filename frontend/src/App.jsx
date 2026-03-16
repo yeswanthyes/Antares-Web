@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, useAnimation } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
 import { 
   Zap, 
   Shield, 
@@ -12,74 +13,108 @@ import {
   Download,
   Smartphone,
   CheckCircle2,
-  Mail
+  Mail,
+  Search,
+  Settings,
+  ShieldCheck,
+  Terminal,
+  Activity,
+  Battery
 } from 'lucide-react';
 
-const Highlight = ({ children, color = 'cyan' }) => {
-  const colors = {
-    cyan: 'border-brand-cyan text-brand-cyan',
-    purple: 'border-brand-purple text-brand-purple',
-    lime: 'border-brand-lime text-brand-lime',
-  };
+const Reveal = ({ children, width = "fit-content" }) => {
+  const controls = useAnimation();
+  const [ref, inView] = useInView({ threshold: 0.2, triggerOnce: true });
+
+  useEffect(() => {
+    if (inView) {
+      controls.start("visible");
+    }
+  }, [controls, inView]);
+
   return (
-    <span className={`highlight-pill mx-1 ${colors[color] || colors.cyan}`}>
+    <motion.div
+      ref={ref}
+      variants={{
+        hidden: { opacity: 0, y: 75 },
+        visible: { opacity: 1, y: 0 },
+      }}
+      initial="hidden"
+      animate={controls}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      style={{ width }}
+    >
       {children}
-    </span>
+    </motion.div>
   );
 };
 
-const Nav = () => (
-  <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center justify-between px-8 py-4 glass-dark rounded-full w-[90%] max-w-6xl">
-    <div className="flex items-center gap-2">
-      <div className="w-8 h-8 flex items-center justify-center">
-        <Globe className="w-6 h-6 text-brand-cyan" />
+const SectionHeading = ({ title, subtitle }) => (
+  <div className="mb-12">
+    {subtitle && (
+      <p className="text-serif-italic text-[#FF5A5F] text-lg mb-4">{subtitle}</p>
+    )}
+    <h2 className="heading-condensed text-5xl md:text-7xl lg:text-8xl">{title}</h2>
+  </div>
+);
+
+const Section = ({ title, subtitle, description, children, visual, reverse = false, id }) => (
+  <section id={id} className="reveal-section px-8 md:px-24">
+    <div className={`max-w-7xl mx-auto flex flex-col ${reverse ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-16 md:gap-32`}>
+      <div className="flex-1">
+        <Reveal>
+          <SectionHeading title={title} subtitle={subtitle} />
+          <p className="text-xl text-white/50 leading-relaxed mb-10 max-w-xl">
+            {description}
+          </p>
+          {children}
+        </Reveal>
       </div>
-      <span className="text-xl font-bold tracking-tight text-white">Antares</span>
+      <div className="flex-1 w-full">
+        <Reveal>
+          <div className="relative group">
+            <div className="absolute -inset-1 bg-gradient-to-r from-white/10 to-transparent rounded-[2rem] blur-xl opacity-20 group-hover:opacity-40 transition-opacity" />
+            <div className="relative glass-lupine rounded-[2rem] overflow-hidden aspect-square flex items-center justify-center p-8">
+              {visual}
+            </div>
+          </div>
+        </Reveal>
+      </div>
     </div>
-    <div className="hidden lg:flex items-center gap-10 text-sm font-medium text-white/60">
-      <a href="#features" className="hover:text-brand-cyan transition-colors">Products</a>
-      <a href="#solutions" className="hover:text-brand-cyan transition-colors">Solutions</a>
-      <a href="#pricing" className="hover:text-brand-cyan transition-colors">Pricing</a>
-      <a href="#about" className="hover:text-brand-cyan transition-colors">About</a>
-    </div>
-    <div className="flex items-center gap-4">
-      <button className="hidden sm:block text-sm font-semibold text-white/80 hover:text-white transition-colors">
-        Log In
-      </button>
-      <button className="px-6 py-2.5 bg-white text-brand-black font-bold rounded-full transition-all hover:scale-105 active:scale-95 text-sm">
-        Sign Up
-      </button>
-    </div>
-  </nav>
+  </section>
 );
 
-const FeatureCard = ({ icon: Icon, title, description, color = 'cyan', delay }) => (
-  <motion.div 
-    initial={{ opacity: 0, y: 30 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ delay, duration: 0.6 }}
-    className="p-8 rounded-[2.5rem] glass-dark border-white/5 hover:border-white/20 transition-all group relative overflow-hidden"
-  >
-    <div className={`absolute top-0 right-0 w-32 h-32 blur-3xl opacity-10 transition-opacity group-hover:opacity-20 -mr-16 -mt-16 bg-brand-${color}`} />
-    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-8 glass border-white/10`}>
-      <Icon className={`w-7 h-7 text-brand-${color}`} />
-    </div>
-    <h3 className="text-2xl font-bold mb-4 text-white">{title}</h3>
-    <p className="text-white/50 leading-relaxed text-lg">{description}</p>
-  </motion.div>
-);
+const Nav = () => {
+  const [scrolled, setScrolled] = useState(false);
 
-const StoreButton = ({ type }) => {
-  const isAppStore = type === 'apple';
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <button className="flex items-center gap-4 px-8 py-3.5 glass hover:bg-white/10 transition-all rounded-2xl group border-white/10">
-      {isAppStore ? <Download className="w-6 h-6 text-white" /> : <Smartphone className="w-6 h-6 text-white" />}
-      <div className="text-left">
-        <p className="text-[10px] uppercase tracking-widest text-white/50">{isAppStore ? 'Download on' : 'Get it on'}</p>
-        <p className="text-lg font-bold text-white">{isAppStore ? 'App Store' : 'Google Play'}</p>
+    <nav className={`fixed top-0 left-0 right-0 z-50 px-8 py-6 transition-all duration-500 ${scrolled ? 'bg-black/90 backdrop-blur-md border-b border-white/10 py-4' : 'bg-transparent'}`}>
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className="flex items-center gap-3 group cursor-pointer">
+          <img 
+            src="/antares_logo.png" 
+            alt="Antares Logo" 
+            className="w-10 h-10 object-contain group-hover:scale-110 transition-transform duration-500" 
+          />
+          <span className="heading-condensed text-2xl tracking-widest">Antares</span>
+        </div>
+        <div className="hidden lg:flex items-center gap-12 text-[10px] font-bold tracking-[0.2em] uppercase text-white/60">
+          <a href="#features" className="hover:text-white transition-colors">Products</a>
+          <a href="#performance" className="hover:text-white transition-colors">Performance</a>
+          <a href="#security" className="hover:text-white transition-colors">Security</a>
+          <a href="https://github.com" className="hover:text-[#FF5A5F] transition-colors"><Github className="w-4 h-4" /></a>
+        </div>
+        <button className="btn-ghost">
+          Download
+        </button>
       </div>
-    </button>
+    </nav>
   );
 };
 
@@ -99,219 +134,277 @@ export default function App() {
       });
       if (response.ok) {
         setSubscribed(true);
-      } else {
-        console.error('Subscription failed');
       }
     } catch (error) {
-      console.error('Error connecting to backend:', error);
+      console.error('Error:', error);
     }
   };
 
   return (
-    <div className="min-h-screen bg-brand-black selection:bg-brand-cyan/30">
+    <div className="bg-black text-white selection:bg-[#FF5A5F]/30 glow-vignette">
       <Nav />
       
-      {/* Hero Section */}
-      <section className="relative pt-48 pb-24 px-8 overflow-hidden">
-        {/* Decorative Background Glows */}
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-brand-cyan/10 rounded-full blur-[160px] animate-pulse" />
-        <div className="absolute bottom-[10%] right-[-10%] w-[40%] h-[40%] bg-brand-purple/10 rounded-full blur-[160px]" />
+      {/* SECTION 1 — HERO SECTION */}
+      <section className="relative min-h-screen flex flex-col items-center justify-center pt-20 px-8">
+        <div className="absolute top-0 left-0 right-0 bottom-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-[20%] left-[10%] w-[30%] h-[40%] bg-blue-500/5 rounded-full blur-[120px]" />
+          <div className="absolute bottom-[20%] right-[10%] w-[40%] h-[30%] bg-[#FF5A5F]/5 rounded-full blur-[120px]" />
+        </div>
         
-        <div className="max-w-7xl mx-auto flex flex-col items-center text-center relative z-10">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-          >
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-10 tracking-tight leading-[1.1]">
-              Ensuring <Highlight color="lime">online payments</Highlight> <br />
-              are <Highlight color="cyan">advanced</Highlight> and <Highlight color="purple">secure</Highlight>
-            </h1>
-            <p className="text-xl text-white/50 max-w-3xl mx-auto mb-16 leading-relaxed">
-              Experience the next frontier of digital security with Antares Browser. 
-              Built for speed, baked-in privacy, and high-performance AI integration.
-            </p>
-            
-            <div className="flex flex-wrap items-center justify-center gap-6 mb-24">
-              <StoreButton type="apple" />
-              <StoreButton type="google" />
-            </div>
-          </motion.div>
-          
-          {/* Main Hero Visual */}
-          <motion.div 
-            initial={{ opacity: 0, y: 60 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 1 }}
-            className="w-full max-w-6xl relative"
-          >
-            <div className="relative z-10 glass-dark rounded-[3rem] p-4 border-white/5 shadow-2xl overflow-hidden aspect-[21/10]">
+        <div className="max-w-7xl mx-auto text-center relative z-10">
+          <Reveal>
+            <div className="mb-8 flex justify-center">
               <img 
-                src="/hero.png" 
-                alt="Cyber Security Visual" 
-                className="w-full h-full object-cover rounded-[2.5rem] opacity-80"
+                src="/antares_logo.png" 
+                alt="Antares Logo" 
+                className="w-32 h-32 object-contain" 
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-transparent to-transparent " />
             </div>
-            {/* Background elements for depth */}
-            <div className="absolute -top-12 -right-12 w-64 h-64 glass rounded-[3rem] rotate-12 -z-10 blur-sm opacity-20" />
-            <div className="absolute -bottom-12 -left-12 w-80 h-80 glass rounded-[4rem] -rotate-6 -z-10 blur-sm opacity-20" />
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Stats/Logo Cloud Section */}
-      <section className="py-20 border-y border-white/5 bg-white/[0.02]">
-        <div className="max-w-7xl mx-auto px-8 flex flex-wrap justify-between items-center gap-12 opacity-40">
-           {['Trusted by', 'FORTUNE 500', 'TECHCRUNCH', 'WIRED', 'FORBES', 'VERGE'].map((logo, i) => (
-             <span key={i} className="text-xl font-bold tracking-widest">{logo}</span>
-           ))}
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section id="features" className="py-32 px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
-            <div className="max-w-2xl">
-              <h2 className="text-4xl md:text-6xl font-black mb-8 leading-tight">
-                Empowering businesses with <br />
-                <span className="text-white/40">innovative security tools.</span>
-              </h2>
-            </div>
-            <div className="pb-4">
-              <button className="text-lg font-bold text-brand-cyan hover:underline flex items-center gap-2">
-                Explore all features <ChevronRight className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <FeatureCard 
-              icon={Zap} 
-              title="Real-time Monitoring" 
-              description="Stay ahead of threats with constant surveillance of your digital assets and transactions."
-              color="cyan"
-              delay={0.1}
-            />
-            <FeatureCard 
-              icon={Lock} 
-              title="Quantum Encryption" 
-              description="Protect your sensitive data with unbreakable, next-level cryptographic protocols."
-              color="purple"
-              delay={0.2}
-            />
-            <FeatureCard 
-              icon={Shield} 
-              title="Automated Shielding" 
-              description="Our AI-driven backend automatically blocks suspicious activities before they happen."
-              color="lime"
-              delay={0.3}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Coming Soon / Newsletter Section */}
-      <section className="py-32 px-8">
-        <div className="max-w-5xl mx-auto relative group">
-          <div className="absolute -inset-1 bg-gradient-to-r from-brand-cyan via-brand-purple to-brand-lime rounded-[4rem] opacity-20 blur-2xl group-hover:opacity-30 transition-opacity" />
-          <div className="relative glass-dark rounded-[4rem] p-12 md:p-24 text-center border-white/10">
-            <h2 className="text-4xl md:text-6xl font-black mb-8 leading-[1.1]">
-              Antares Cloud is <Highlight color="cyan">Coming Soon</Highlight>
-            </h2>
-            <p className="text-xl text-white/50 mb-12 max-w-2xl mx-auto">
-              Be the first to know when we launch our enterprise-grade security cloud. Secure your spot on the waitlist today.
+            <p className="text-serif-italic text-[#FF5A5F] text-xl mb-6">The AI-Powered Intelligent Browser</p>
+            <h1 className="heading-condensed text-7xl md:text-9xl lg:text-[12rem] mb-8 leading-[0.8] tracking-tighter">
+              Antares <br /> Browser
+            </h1>
+            <p className="text-xl text-white/40 max-w-2xl mx-auto mb-12 leading-relaxed font-light">
+              Antares is a next-generation browser built on the Chromium engine with deep AI integration. It enhances productivity, optimizes browsing performance, and protects your privacy with intelligent automation.
             </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              <button className="btn-accent border-2 border-[#FF5A5F]">Download Browser</button>
+              <button className="btn-ghost border-2">View Features</button>
+            </div>
+          </Reveal>
+          
+          <Reveal>
+            <div className="mt-24 relative px-4 max-w-5xl mx-auto">
+              <div className="glass-lupine rounded-[3rem] p-4 border-white/5 shadow-2xl overflow-hidden aspect-[21/10]">
+                <img 
+                  src="/antares_hero_visual_lupine_style_1773643585909.png" 
+                  alt="Antares UI Mockup" 
+                  className="w-full h-full object-cover rounded-[2.5rem] opacity-90"
+                />
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* SECTION 2 — PRODUCT INTRODUCTION */}
+      <Section 
+        id="intro"
+        title="Reinventing the Way You Browse"
+        subtitle="Innovation"
+        description="Antares combines the speed of Chromium with powerful AI features to create a smarter browsing experience. From intelligent search assistance to automated summarization and performance optimization, Antares transforms how users interact with the web."
+        visual={
+          <div className="w-full h-full flex items-center justify-center">
+            <div className="relative w-full aspect-video glass-lupine rounded-3xl p-6 border-white/5 overflow-hidden">
+               <div className="flex gap-2 mb-4">
+                  <div className="w-3 h-3 rounded-full bg-red-500/20" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-500/20" />
+                  <div className="w-3 h-3 rounded-full bg-green-500/20" />
+               </div>
+               <div className="space-y-4">
+                  <div className="h-4 w-3/4 bg-white/5 rounded" />
+                  <div className="h-4 w-full bg-white/5 rounded" />
+                  <div className="h-4 w-1/2 bg-[#FF5A5F]/20 rounded border border-[#FF5A5F]/30" />
+               </div>
+               <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-[#FF5A5F]/10 blur-3xl rounded-full" />
+            </div>
+          </div>
+        }
+      />
+
+      {/* SECTION 3 — CORE FEATURES */}
+      <section id="features" className="py-24 px-8 md:px-24">
+        <div className="max-w-7xl mx-auto">
+          <Reveal>
+            <SectionHeading title="Built for the Future of Browsing" subtitle="Core Features" />
+          </Reveal>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mt-12">
+            {[
+              { icon: Search, title: "AI Search Assistant", text: "Instantly summarize webpages, ask questions about content, and get intelligent answers without leaving the page." },
+              { icon: Activity, title: "Performance Optimization", text: "Antares intelligently manages tabs and system resources to ensure faster browsing and reduced memory usage." },
+              { icon: ShieldCheck, title: "Privacy First Architecture", text: "Advanced privacy protection blocks trackers and ensures secure browsing with built-in encryption." },
+              { icon: Terminal, title: "Developer Friendly Tools", text: "Built-in tools designed for developers including enhanced debugging, network analysis, and performance monitoring." }
+            ].map((feature, i) => (
+              <Reveal key={i}>
+                <div className="p-10 glass-lupine rounded-[2rem] border-white/5 hover:border-[#FF5A5F]/20 transition-all group">
+                  <feature.icon className="w-10 h-10 text-[#FF5A5F] mb-8 group-hover:scale-110 transition-transform" />
+                  <h4 className="heading-condensed text-2xl mb-4">{feature.title}</h4>
+                  <p className="text-white/40 leading-relaxed font-light">{feature.text}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 4 — TECHNOLOGY STACK */}
+      <Section 
+        id="tech"
+        title="Built on Modern Technology"
+        subtitle="Infrastructure"
+        description="Antares leverages industry-leading technologies to deliver a fast and reliable browsing experience."
+        reverse={true}
+        visual={
+          <div className="grid grid-cols-3 gap-6 opacity-30">
+            {[Github, Zap, Cpu, Sparkles, Globe, Lock].map((Icon, i) => (
+              <div key={i} className="aspect-square glass-lupine rounded-3xl flex items-center justify-center">
+                 <Icon className="w-10 h-10" />
+              </div>
+            ))}
+          </div>
+        }
+      >
+        <div className="flex flex-wrap gap-3">
+          {['Chromium', 'Electron', 'React', 'Node.js', 'AI Integration', 'AES-256 Encryption'].map((tag, i) => (
+            <span key={i} className="px-4 py-2 border border-white/10 text-[10px] uppercase tracking-widest font-bold hover:border-[#FF5A5F]/50 transition-colors">
+              {tag}
+            </span>
+          ))}
+        </div>
+      </Section>
+
+      {/* SECTION 5 — AI INTEGRATION */}
+      <Section 
+        id="ai"
+        title="Browsing Meets Artificial Intelligence"
+        subtitle="Intelligence"
+        description="Antares integrates advanced AI capabilities directly into the browser to assist users with research, summarization, and automation."
+        visual={
+          <div className="w-full h-full flex items-center justify-center">
+            <div className="relative w-full aspect-square glass-lupine rounded-full p-4 border-white/5 overflow-hidden animate-pulse">
+               <img 
+                 src="/antares_ai_interface_visual_1773643614333.png" 
+                 alt="AI Interface" 
+                 className="w-full h-full object-cover rounded-full opacity-60"
+               />
+               <div className="absolute inset-0 bg-[#FF5A5F]/10 blur-xl mix-blend-overlay" />
+            </div>
+          </div>
+        }
+      >
+        <ul className="space-y-4">
+          {['Smart webpage summarization', 'AI powered search insights', 'Context aware suggestions', 'Automated productivity tools'].map((item, i) => (
+            <li key={i} className="flex items-center gap-4 text-white/60">
+              <div className="w-1.5 h-1.5 bg-[#FF5A5F] rounded-full" />
+              <span className="text-serif-italic italic text-lg">{item}</span>
+            </li>
+          ))}
+        </ul>
+      </Section>
+
+      {/* SECTION 6 — PERFORMANCE */}
+      <Section 
+        id="performance"
+        title="Speed Without Compromise"
+        subtitle="Performance"
+        description="Powered by Chromium and optimized resource management, Antares ensures lightning-fast page loading, smooth multitasking, and improved battery efficiency."
+        reverse={true}
+        visual={
+          <div className="flex flex-col gap-8 w-full">
+            {[
+              { label: 'Tab Management', value: '50% Faster' },
+              { label: 'Memory Usage', value: '-40% Reduced' },
+              { label: 'Browsing Speed', value: '2.5x Enhanced' }
+            ].map((stat, i) => (
+              <div key={i} className="space-y-2">
+                <div className="flex justify-between text-[10px] uppercase font-bold tracking-[0.2em]">
+                  <span>{stat.label}</span>
+                  <span className="text-[#FF5A5F]">{stat.value}</span>
+                </div>
+                <div className="h-1 bg-white/5 w-full">
+                  <motion.div 
+                    initial={{ width: 0 }} 
+                    whileInView={{ width: '70%' }} 
+                    className="h-full bg-[#FF5A5F]" 
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        }
+      />
+
+      {/* SECTION 7 — SECURITY */}
+      <Section 
+        id="security"
+        title="Privacy Built Into the Core"
+        subtitle="Security"
+        description="Antares protects your data with advanced encryption, tracker blocking, and secure sandboxing architecture."
+        visual={
+          <div className="relative group perspective-1000">
+             <div className="w-64 h-64 glass-lupine rounded-[3rem] p-12 flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-700">
+                <ShieldCheck className="w-32 h-32 text-[#FF5A5F] glow-cyan" />
+             </div>
+             <div className="absolute -inset-10 bg-[#FF5A5F]/5 blur-3xl -z-10 rounded-full" />
+          </div>
+        }
+      >
+        <div className="grid grid-cols-2 gap-4">
+          {['End-to-end encryption', 'Tracker blocking', 'Secure browsing isolation', 'Data protection architecture'].map((feature, i) => (
+            <div key={i} className="flex flex-col gap-2 p-4 border border-white/5">
+              <CheckCircle2 className="w-4 h-4 text-[#FF5A5F]" />
+              <span className="text-[10px] uppercase font-bold tracking-widest">{feature}</span>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* SECTION 8 — DOWNLOAD */}
+      <section className="py-32 px-8 flex items-center justify-center border-t border-white/5">
+        <div className="max-w-4xl mx-auto text-center">
+          <Reveal>
+            <SectionHeading title="Experience the Future of Browsing" subtitle="GET STARTED" />
+            <p className="text-xl text-white/40 mb-12 max-w-2xl mx-auto font-light">
+              Download Antares today and experience an AI-powered browsing environment built for productivity, speed, and security.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              <button className="btn-accent px-12 py-5 text-sm">Download for Windows</button>
+              <button className="btn-ghost px-12 py-5 text-sm opacity-50 cursor-not-allowed">Coming Soon: macOS & Linux</button>
+            </div>
             
-            {subscribed ? (
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="flex items-center justify-center gap-3 text-brand-lime text-2xl font-bold bg-brand-lime/10 py-6 rounded-3xl"
-              >
-                <CheckCircle2 className="w-8 h-8" />
-                You're on the list!
-              </motion.div>
-            ) : (
-              <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto">
-                <div className="flex-1 relative">
-                  <Mail className="absolute left-6 top-1/2 -translate-y-1/2 text-white/30 w-6 h-6" />
+            <div className="mt-24 p-12 glass-lupine rounded-[3rem] border-white/10 max-w-2xl mx-auto">
+              <h4 className="heading-condensed text-3xl mb-8">Join the Waitlist</h4>
+              {subscribed ? (
+                <div className="text-[#FF5A5F] text-2xl heading-condensed">You're on the list.</div>
+              ) : (
+                <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-4">
                   <input 
                     type="email" 
                     required
-                    placeholder="Enter your work email"
-                    className="w-full bg-white/5 border border-white/10 rounded-3xl py-6 pl-16 pr-8 text-white focus:outline-none focus:border-brand-cyan transition-colors text-lg"
+                    placeholder="ENTER YOUR EMAIL"
+                    className="flex-1 bg-transparent border-b-2 border-white/20 py-4 text-white focus:outline-none focus:border-[#FF5A5F] transition-colors"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
-                </div>
-                <button 
-                  type="submit" 
-                  className="px-10 py-6 bg-white text-brand-black font-black rounded-3xl hover:scale-105 transition-all text-xl"
-                >
-                  Join Waitlist
-                </button>
-              </form>
-            )}
-            
-            <div className="mt-12 flex items-center justify-center gap-8 opacity-40 grayscale group-hover:grayscale-0 transition-all">
-               <Zap className="w-8 h-8" />
-               <Sparkles className="w-8 h-8" />
-               <Cpu className="w-8 h-8" />
-               <Globe className="w-8 h-8" />
+                  <button type="submit" className="btn-accent">Submit</button>
+                </form>
+              )}
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-32 px-8 border-t border-white/5 bg-brand-black">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-16 mb-24">
-            <div className="col-span-1 md:col-span-1">
-              <div className="flex items-center gap-2 mb-8">
-                <Globe className="w-8 h-8 text-brand-cyan" />
-                <span className="text-2xl font-bold text-white">Antares</span>
+      {/* SECTION 9 — FOOTER */}
+      <footer className="py-24 px-8 md:px-24 bg-black border-t border-white/5 relative overflow-hidden">
+        <div className="absolute bottom-[-10%] left-[-5%] heading-condensed text-[20rem] opacity-[0.02] select-none pointer-events-none">
+          ANTARES
+        </div>
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-12 mb-24">
+            {['Product', 'Features', 'Technology', 'Download', 'GitHub'].map((section, i) => (
+              <div key={i}>
+                <h5 className="heading-condensed text-lg mb-6">{section}</h5>
+                <ul className="space-y-3 text-[10px] font-bold tracking-widest text-white/30 uppercase cursor-pointer">
+                  <li className="hover:text-white transition-colors">Overview</li>
+                  <li className="hover:text-white transition-colors">Documentation</li>
+                  <li className="hover:text-white transition-colors">Updates</li>
+                </ul>
               </div>
-              <p className="text-white/40 leading-relaxed text-lg italic">
-                The future of web security, built for everyone.
-              </p>
-            </div>
-            <div>
-              <h4 className="text-white font-bold mb-8 text-xl">Product</h4>
-              <ul className="space-y-4 text-white/40 text-lg">
-                <li className="hover:text-brand-cyan cursor-pointer transition-colors">Features</li>
-                <li className="hover:text-brand-cyan cursor-pointer transition-colors">Security</li>
-                <li className="hover:text-brand-cyan cursor-pointer transition-colors">Enterprise</li>
-                <li className="hover:text-brand-cyan cursor-pointer transition-colors">Roadmap</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white font-bold mb-8 text-xl">Company</h4>
-              <ul className="space-y-4 text-white/40 text-lg">
-                <li className="hover:text-brand-cyan cursor-pointer transition-colors">About Us</li>
-                <li className="hover:text-brand-cyan cursor-pointer transition-colors">Careers</li>
-                <li className="hover:text-brand-cyan cursor-pointer transition-colors">Blog</li>
-                <li className="hover:text-brand-cyan cursor-pointer transition-colors">Press</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white font-bold mb-8 text-xl">Legal</h4>
-              <ul className="space-y-4 text-white/40 text-lg">
-                <li className="hover:text-brand-cyan cursor-pointer transition-colors">Privacy Policy</li>
-                <li className="hover:text-brand-cyan cursor-pointer transition-colors">Terms of Service</li>
-                <li className="hover:text-brand-cyan cursor-pointer transition-colors">Cookie Policy</li>
-              </ul>
-            </div>
+            ))}
           </div>
-          <div className="flex flex-col md:flex-row justify-between items-center gap-8 pt-12 border-t border-white/5 text-white/30">
-            <p className="text-lg">© 2026 Antares Security. All rights reserved.</p>
-            <div className="flex gap-8">
-              <Github className="w-6 h-6 hover:text-white cursor-pointer transition-colors" />
-              <div className="w-6 h-6 rounded-full bg-white/30 hover:bg-white transition-colors cursor-pointer" />
-              <div className="w-6 h-6 rounded-full bg-white/30 hover:bg-white transition-colors cursor-pointer" />
-            </div>
+          <div className="flex flex-col md:flex-row justify-between items-center gap-8 pt-12 border-t border-white/5 text-[10px] font-bold tracking-[0.3em] uppercase text-white/20">
+            <p>Antares Browser © 2026</p>
+            <p>AI-Integrated Optimized Browsing Experience</p>
           </div>
         </div>
       </footer>

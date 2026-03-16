@@ -2,6 +2,7 @@
   "name": "antares-web",
   "version": "1.0.0",
   "description": "Antares is a modern, high-performance, and privacy-focused open-source web browser built on top of the Chromium engine. It is designed to be fast, secure, and integrated with the latest AI technologies to enhance your browsing experience.",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "dev": "vite",
@@ -19,6 +20,7 @@
     "postcss": "^8.4.47",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-intersection-observer": "^10.0.3",
     "tailwindcss": "^3.4.14",
     "vite": "^5.4.11"
   }
