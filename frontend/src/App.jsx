@@ -135,21 +135,14 @@ export default function App() {
       <Nav />
 
       {/* SECTION 1 — HERO SECTION */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center pt-20 px-8">
+      <section className="relative min-h-screen flex flex-col items-center justify-center pt-48 px-8">
         <div className="absolute top-0 left-0 right-0 bottom-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-[20%] left-[10%] w-[30%] h-[40%] bg-blue-500/5 rounded-full blur-[120px]" />
+          <div className="absolute top-[10%] left-[20%] w-[30%] h-[40%] bg-[#FF5A5F]/10 rounded-full blur-[120px]" />
           <div className="absolute bottom-[20%] right-[10%] w-[40%] h-[30%] bg-[#FF5A5F]/5 rounded-full blur-[120px]" />
         </div>
 
         <div className="max-w-7xl mx-auto text-center relative z-10">
           <Reveal>
-            <div className="mb-8 flex justify-center">
-              <img
-                src="/antares_logo.png"
-                alt="Antares Logo"
-                className="w-32 h-32 object-contain"
-              />
-            </div>
             <p className="text-serif-italic text-[#FF5A5F] text-xl mb-6">The AI-Powered Intelligent Browser</p>
             <h1 className="heading-condensed text-7xl md:text-9xl lg:text-[12rem] mb-8 leading-[0.8] tracking-tighter">
               Antares <br /> Browser
