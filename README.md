@@ -1,48 +1,41 @@
 # Antares Browser 🚀
 
-Antares is a modern, high-performance, and privacy-focused open-source web browser built on top of the Chromium engine. It is designed to be fast, secure, and integrated with the latest AI technologies to enhance your browsing experience.
+Antares is a modern, high-performance, and AI-integrated web browser built on top of the Chromium engine. It is designed to redefine how people interact with the internet by combining the reliability of Chromium with advanced context-aware AI capabilities.
+
+Developed by **VisualX Technologies**.
 
 ## ✨ Features
 
 - **Blazing Fast Rendering**: Powered by the Chromium engine (Blink + V8).
-- **Modern UI**: A sleek and intuitive interface built with React and Tailwind CSS.
-- **Smooth Animations**: Interactive and fluid transitions using Framer Motion.
-- **AI-Powered Integration**: 
-  - **OpenAI API**: Smart search assistant and webpage summarization.
-  - **Ollama**: Support for local AI models for enhanced privacy and offline assistance.
+- **Modern UI**: A sleek, high-impact industrial minimal interface built with **React** and **Tailwind CSS**.
+- **Smooth Animations**: Interactive and fluid transitions using **Framer Motion**.
+- **AI-Powered Assistance**: 
+  - **Context-Aware Support**: Adapts to your workflow in real-time.
+  - **Automated Intelligence**: Intelligent information retrieval and task automation.
+- **Automated Newsletter System**:
+  - **PDF Generation**: Dynamically converts markdown project updates into professional PDF newsletters.
+  - **Email Automation**: Instant subscription confirmation with automated PDF delivery via **Nodemailer**.
 - **Security & Privacy**:
-  - **AES-256 Encryption** for user data.
-  - **Sandbox Isolation** to prevent malicious scripts from affecting the system.
-  - **Secure Storage APIs** for managing sensitive information.
-- **Open Source**: Full transparency and community-driven development.
+  - **AES-256 Encryption** for all user data.
+  - **Sandbox Isolation** to ensure a safe browsing environment.
 
 ## 🛠️ Tech Stack
 
 ### Core Browser Engine
-- **Chromium**: The foundation for rendering and JavaScript execution (Blink + V8).
+- **Chromium**: The industry standard foundation for rendering and JS execution.
 
 ### Application Framework
-- **Electron**: Enables building a cross-platform desktop application using web technologies and Node.js.
+- **Electron**: Powers the cross-platform desktop application environment.
 
-### Frontend / UI
-- **React**: Declarative UI library for building the browser components (tabs, address bar, settings).
-- **Tailwind CSS**: Utility-first CSS framework for rapid and consistent styling.
-- **Framer Motion**: Production-ready motion library for React.
+### Frontend
+- **React**: Modern component-based UI development.
+- **Tailwind CSS**: High-end styling with the "Lupine" aesthetic.
+- **Framer Motion**: Advanced reveal animations and interactions.
 
-### Backend / Core Logic
-- **Node.js**: Powers the browser's internal logic and system-level integrations.
-
-### AI Integration
-- **OpenAI API**: For cloud-based AI features.
-- **Ollama**: For local, private AI model execution.
-
-### Security
-- **AES-256 Encryption**: Industry-standard encryption for data at rest.
-- **Sandbox Isolation**: Leveraging Chromium's robust sandboxing architecture.
-
-### Advanced Tools
-- **Redux**: Predictable state container for managing complex browser states (history, tabs, settings).
-- **Electron Builder**: Tooling for building and packaging the application for distribution (.exe, .dmg, etc.).
+### Backend & Automation
+- **Node.js**: Internal logic and waitlist API management.
+- **Nodemailer**: Automated email delivery system with file attachment support.
+- **md-to-pdf**: Toolchain for professional documentation and newsletter generation.
 
 ## 🚀 Getting Started
 
@@ -51,22 +44,33 @@ Antares is a modern, high-performance, and privacy-focused open-source web brows
 - npm or yarn
 
 ### Installation
-1. Clone the repository:
+
+1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yeswanthyes/antares.git
+   git clone https://github.com/yeswanthyes/Antares-Web.git
    ```
-2. Navigate to the project directory:
+
+2. **Frontend Setup**:
    ```bash
-   cd antares
-   ```
-3. Install dependencies:
-   ```bash
+   cd frontend
    npm install
-   ```
-4. Start the application in development mode:
-   ```bash
    npm run dev
    ```
+
+3. **Backend Setup**:
+   - Navigate to `/backend`
+   - Install dependencies: `npm install`
+   - Create a `.env` file based on `.env.example`:
+     ```env
+     EMAIL_USER=your-email@gmail.com
+     EMAIL_PASS=your-app-password
+     ```
+   - Start the server: `node server.js`
+
+## 🔗 Links
+
+- **Portfolio**: [yeswanth-s-portfolio-dev.netlify.app](https://yeswanth-s-portfolio-dev.netlify.app/)
+- **GitHub**: [github.com/yeswanthyes](https://github.com/yeswanthyes)
 
 ## 📜 License
 
@@ -74,4 +78,4 @@ Antares is open-source software licensed under the [MIT License](LICENSE).
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request or open an issue for any feature requests or bug reports.
+Built with ❤️ by **VisualX Technologies**. Contributions are welcome!
