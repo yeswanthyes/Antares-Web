@@ -363,9 +363,12 @@ export default function App() {
             </div>
 
             <div className="mt-24 p-12 glass-lupine rounded-[3rem] border-white/10 max-w-2xl mx-auto">
-              <h4 className="heading-condensed text-3xl mb-8">Join the Waitlist</h4>
+              <h4 className="heading-condensed text-3xl mb-8">Subscribe for newsletter</h4>
               {subscribed ? (
-                <div className="text-[#FF5A5F] text-2xl heading-condensed">You're on the list.</div>
+                <div className="text-[#FF5A5F] text-2xl heading-condensed">
+                  Welcome to the community! <br /> 
+                  Your newsletter is on its way to your inbox.
+                </div>
               ) : (
                 <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-4">
                   <input
