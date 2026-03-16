@@ -54,6 +54,12 @@ export default async function handler(req, res) {
   });
 
   try {
+    const pdfPath = path.join(__dirname, 'assets', 'Newsletter.pdf');
+    const previewPath = path.join(__dirname, 'assets', 'news_letter_preview.png');
+
+    console.log('Assets directory:', path.join(__dirname, 'assets'));
+    console.log('PDF path:', pdfPath, 'Exists:', fs.existsSync(pdfPath));
+
     // 1. Send the Newsletter Email
     if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
       const mailOptions = {
@@ -106,11 +112,11 @@ export default async function handler(req, res) {
         attachments: [
           {
             filename: 'Antares_Newsletter.pdf',
-            path: path.join(process.cwd(), 'api', 'assets', 'Newsletter.pdf'),
+            path: pdfPath,
           },
           {
             filename: 'preview.png',
-            path: path.join(process.cwd(), 'api', 'assets', 'news_letter_preview.png'),
+            path: previewPath,
             cid: 'newsletter_preview'
           }
         ],
@@ -120,10 +126,11 @@ export default async function handler(req, res) {
       await transporter.sendMail(mailOptions);
       return res.status(200).json({ message: 'Success! You are on the list.' });
     } else {
+      console.warn('Email config missing');
       return res.status(200).json({ message: 'Success! (Email skipped due to missing config)' });
     }
   } catch (err) {
     console.error('Error in API processing:', err);
-    return res.status(500).json({ error: 'Failed to process subscription' });
+    return res.status(500).json({ error: `Failed to process subscription: ${err.message}` });
   }
 }
