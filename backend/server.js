@@ -9,7 +9,11 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(cors({
+  origin: '*', // Allow all origins for initial deployment
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type']
+}));
 app.use(express.json());
 
 // Log directory for waitlist
@@ -22,11 +26,16 @@ const nodemailer = require('nodemailer');
 
 // Configure Nodemailer
 const transporter = nodemailer.createTransport({
-  service: 'gmail', // or your preferred service
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false, // Use STARTTLS
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
+  tls: {
+    rejectUnauthorized: false // Helps with some cloud network configurations
+  }
 });
 
 app.post('/api/waitlist', async (req, res) => {
