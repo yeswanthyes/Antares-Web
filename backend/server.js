@@ -3,6 +3,12 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const fs = require('fs');
 const path = require('path');
+const dns = require('dns');
+
+// Force IPv4 for all network requests to avoid Render's IPv6 routing issues
+if (dns.setDefaultResultOrder) {
+  dns.setDefaultResultOrder('ipv4first');
+}
 
 dotenv.config();
 
