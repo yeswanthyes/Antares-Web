@@ -11,7 +11,17 @@ exports.handler = async (event, context) => {
     };
   }
 
-  const { email } = JSON.parse(event.body);
+  let email;
+  try {
+    const body = JSON.parse(event.body);
+    email = body.email;
+  } catch (e) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: 'Invalid JSON body' }),
+    };
+  }
+
   if (!email) {
     return {
       statusCode: 400,
@@ -98,18 +108,30 @@ exports.handler = async (event, context) => {
       await transporter.sendMail(mailOptions);
       return {
         statusCode: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        },
         body: JSON.stringify({ message: 'Success! Your newsletter is on its way.' }),
       };
     } else {
       return {
         statusCode: 200,
-        body: JSON.stringify({ message: 'Success! (Email configuration missing)' }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        },
+        body: JSON.stringify({ message: 'Success! (Email configuration missing on Netlify)' }),
       };
     }
   } catch (error) {
     console.error('Error sending email:', error);
     return {
       statusCode: 500,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
       body: JSON.stringify({ error: 'Failed to send email' }),
     };
   }
