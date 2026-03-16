@@ -115,7 +115,7 @@ export default function App() {
 
   const handleSubscribe = async (e) => {
     e.preventDefault();
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+    const apiUrl = '/api'; // Use internal serverless route
     try {
       const response = await fetch(`${apiUrl}/waitlist`, {
         method: 'POST',
