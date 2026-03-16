@@ -126,9 +126,13 @@ export default function App() {
       });
       if (response.ok) {
         setSubscribed(true);
+      } else {
+        const data = await response.json();
+        alert(`Error: ${data.error || 'Failed to subscribe'}`);
       }
     } catch (error) {
       console.error('Error:', error);
+      alert('Network error. Please try again later.');
     }
   };
 
