@@ -1,17 +1,17 @@
-const nodemailer = require('nodemailer');
-const fs = require('fs');
-const path = require('path');
-const dns = require('dns');
+import nodemailer from 'nodemailer';
+import fs from 'fs';
+import path from 'path';
+import dns from 'dns';
 
 // Force IPv4 for all network requests to avoid routing issues
 if (dns.setDefaultResultOrder) {
   dns.setDefaultResultOrder('ipv4first');
 }
 
-// Export the serverless function handler
-module.exports = async (req, res) => {
+// Export the serverless function handler as default for ES Modules
+export default async function handler(req, res) {
   // CORS Headers
-  res.setHeader('Access-Control-Allow-Credentials', true);
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
   res.setHeader(
@@ -120,4 +120,4 @@ module.exports = async (req, res) => {
     console.error('Error in API processing:', err);
     return res.status(500).json({ error: 'Failed to process subscription' });
   }
-};
+}
