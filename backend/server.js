@@ -35,7 +35,8 @@ const transporter = nodemailer.createTransport({
   },
   tls: {
     rejectUnauthorized: false // Helps with some cloud network configurations
-  }
+  },
+  family: 4 // Force IPv4 to avoid IPv6 routing issues on some cloud providers
 });
 
 app.post('/api/waitlist', async (req, res) => {
