@@ -48,6 +48,10 @@
   .glass-lupine {
     @apply backdrop-blur-3xl bg-white/5 border border-white/10;
   }
+
+  .glass-dark {
+    @apply backdrop-blur-2xl bg-black/40 border border-white/5;
+  }
   
   .glow-vignette {
     box-shadow: inset 0 0 150px rgba(0, 0, 0, 0.9), 
