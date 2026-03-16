@@ -1,11 +1,6 @@
-@import "tailwindcss";
-
-@theme {
-  --color-brand-cyan: #00B2FF;
-  --color-brand-purple: #8B5CF6;
-  --color-brand-lime: #00FF85;
-  --color-brand-black: #0A0A0A;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   font-family: 'Plus Jakarta Sans', 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -33,7 +28,7 @@ body {
 
 @layer utilities {
   .glass {
-    @apply backdrop-blur-xl bg-white/5 border border-white/10;
+    @apply backdrop-blur-xl bg-blend-normal bg-white/5 border border-white/10;
   }
   
   .glass-dark {
